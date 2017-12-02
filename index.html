@@ -40,7 +40,7 @@
 </section>
 
 <script>
-    axios.get('../README.md').then(function (res) {
+    axios.get('./README.md').then(function (res) {
       document.getElementById('content').innerHTML = marked(res.data);
     });
 </script>
