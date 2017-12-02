@@ -1,7 +1,7 @@
 {
-  "name": "delivery-tracking-middleware",
-  "description": "Node.js delivery tracking middleware",
-  "version": "0.0.1",
+  "name": "delibee",
+  "description": "Delibee is delivery tracking library.",
+  "version": "1.0.0",
   "author": {
     "name": "Hyungjoo Kwon",
     "email": "iam@hyungdew.com",
