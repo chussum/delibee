@@ -32,6 +32,12 @@ a:hover {
     transition: color 0.2s, background-color 0.2s, border-color 0.2s;
 }
 
+.btn.btn-black {
+    color: rgba(0, 0, 0, 0.7);
+    background-color: rgba(0, 0, 0, 0.08);
+    border-color: rgba(0, 0, 0, 0.2);
+}
+
 .btn + .btn {
     margin-left: 1rem;
 }
