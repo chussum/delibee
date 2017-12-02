@@ -6,6 +6,7 @@
 const DeliveryCompany = require('./lib/models/DeliveryCompany')
 
 module.exports = (options = {}) => {
+  const delibee = require('./lib')(options)
   return {
     company: async () => {
       return require('./lib/models/DeliveryCompanyType')
@@ -14,7 +15,7 @@ module.exports = (options = {}) => {
       try {
         const company = new DeliveryCompany(companyCode)
         const lowerCode = company.code.toLowerCase()
-        const invoice = await require('./lib')(options)[lowerCode](invoiceNumber)
+        const invoice = await delibee[lowerCode](invoiceNumber)
         return {
           success: true,
           invoice
