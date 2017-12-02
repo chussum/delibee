@@ -1,6 +1,6 @@
 # Delibee
 <p align="center">
-    <img src="doc/img/delibee.png" width="120" alt="delibee" /><br>
+    <img src="doc/img/delibee.png" width="140" alt="delibee" /><br>
     Delibee is delivery tracking library.
 </p> 
 
@@ -177,12 +177,12 @@ Contributors
 ----
 Company Name | Contributor
 ---- | ----
-우체국택배 | @@flosdor
-CJ대한통운 | @@flosdor
-한진택배 | @@flosdor
-롯데택배 (구. 현대택배) | @@flosdor
-로젠택배 | @@flosdor
-KG로지스 | @@flosdor
+우체국택배 | @flosdor
+CJ대한통운 | @flosdor
+한진택배 | @flosdor
+롯데택배 (구. 현대택배) | @flosdor
+로젠택배 | @flosdor
+KG로지스 | @flosdor
 
 
 ## License
