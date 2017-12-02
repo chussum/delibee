@@ -87,6 +87,10 @@
 <script>
   function tracking() {
     var invoiceNumber = document.getElementById('invoiceNumber');
+    if (invoiceNumber.disabled) {
+      return;
+    }
+    invoiceNumber.disabled = true;
     axios
       .get('https://delibee.hyungdew.com/tracking', {
         params: {
@@ -100,7 +104,9 @@
           document.getElementById('delibee-info').innerHTML = tmpl("delibee-template", data.invoice);
         } else {
           data.message && alert(data.message);
+          document.getElementById('delibee-info').innerHTML = '';
         }
+        invoiceNumber.disabled = false;
       });
   }
   axios.get('./README.md').then(function (res) {
