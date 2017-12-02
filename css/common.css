@@ -79,7 +79,7 @@ input[type="text"] {
     border-color: rgba(0, 0, 0, 0.3);
 }
 
-iframe {
+.github-star {
     position: absolute;
     top: 20px;
     left: 20px;
