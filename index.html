@@ -14,6 +14,7 @@
     <script src="https://code.jquery.com/jquery-1.12.4.min.js"
             integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ="
             crossorigin="anonymous"></script>
+    <script src="https://ajax.microsoft.com/ajax/jquery.templates/beta1/jquery.tmpl.min.js"></script>
 </head>
 <body>
 <section class="page-header">
@@ -25,10 +26,11 @@
 </section>
 
 <section class="main-content">
-    <h3>Delibee API TEST</h3>
-    <p>
-        <button type="button" class="btn" onClick="tracking()">TEST</button>
-    </p>
+    <h2>Delibee API TEST</h2>
+    <form onSubmit="tracking(); return false;">
+        <input id="invoiceNumber" type="text" value="">
+        <button type="button" onClick="tracking()">TEST</button>
+    </form>
 
     <div id="markdown-content"></div>
 
@@ -40,9 +42,30 @@
 
 </section>
 
+<script id="invoice" type="text/x-jQuery-tmpl">
+    <tr>
+        <td>{{= sample1}}</td>
+        <td>{{= sample2}}</td>
+    </tr>
+</script>
+
 <script>
     function tracking() {
-        console.log('test');
+      var invoiceNumber = document.getElementById('invoiceNumber');
+      axios
+        .get('https://delibee.hyungdew.com/tracking', {
+          params: {
+            'company': 'epost',
+            'invoice_no': invoiceNumber.value
+          }
+        })
+        .then(function (res) {
+          if (res.success && res.invoice) {
+            console.log(res.invoice);
+          } else {
+            res.message && alert(res.message);
+          }
+        });
     }
     axios.get('./README.md').then(function (res) {
       document.getElementById('markdown-content').innerHTML = marked(res.data);
