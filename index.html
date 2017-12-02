@@ -26,7 +26,7 @@
 </section>
 
 <section class="main-content">
-    <h2>Delibee API TEST</h2>
+    <h2>Delibee API Test</h2>
     <p>
         <form onSubmit="tracking(); return false;">
             <input id="invoiceNumber" type="text" value="">
@@ -62,10 +62,11 @@
           }
         })
         .then(function (res) {
-          if (res.success && res.invoice) {
-            console.log(res.invoice);
+          var data = res.data;
+          if (data.success && data.invoice) {
+            console.log(data.invoice);
           } else {
-            res.message && alert(res.message);
+            data.message && alert(data.message);
           }
         });
     }
