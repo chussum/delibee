@@ -25,11 +25,12 @@
 </section>
 
 <section class="main-content">
-    <h3>Delibee?</h3>
+    <h3>Delibee API TEST</h3>
+    <p>
+        <button type="button" class="btn" onClick="tracking()">TEST</button>
+    </p>
 
-    <p>개발자를 위한 배송정보 라이브러리</p>
-
-    <div id="content"></div>
+    <div id="markdown-content"></div>
 
     <footer class="site-footer">
         <span class="site-footer-owner"><a href="https://github.com/flosdor/delibee">Delibee</a> is maintained by <a href="https://github.com/flosdor">flosdor</a>.</span>
@@ -40,8 +41,11 @@
 </section>
 
 <script>
+    function tracking() {
+        console.log('test');
+    }
     axios.get('./README.md').then(function (res) {
-      document.getElementById('content').innerHTML = marked(res.data);
+      document.getElementById('markdown-content').innerHTML = marked(res.data);
     });
 </script>
 

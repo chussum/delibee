@@ -1,9 +1,3 @@
-# Delibee
-<p align="center">
-    <img src="docs/img/delibee.png" width="140" alt="delibee" /><br>
-    Delibee is delivery tracking library.
-</p> 
-
 ## Prerequisites
 Node.js >= 7.6
 
