@@ -181,4 +181,4 @@ KG로지스 | @flosdor
 
 ## License
 
-[MIT LICENSE](LICENSE)
+[MIT LICENSE](https://github.com/flosdor/delibee/blob/master/README.md)
