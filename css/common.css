@@ -79,6 +79,12 @@ input[type="text"] {
     border-color: rgba(0, 0, 0, 0.3);
 }
 
+.github-star {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+}
+
 @media screen and (min-width: 64em) {
     .btn {
         padding: 0 1rem;
