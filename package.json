@@ -1,7 +1,7 @@
 {
   "name": "delibee",
   "description": "Delibee is delivery tracking library.",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "author": {
     "name": "Hyungjoo Kwon",
     "email": "iam@hyungdew.com",
@@ -11,7 +11,7 @@
     "Hyungjoo Kwon <iam@hyungdew.com>"
   ],
   "license": "MIT",
-  "repository": "flosdor/delivery-tracking-middleware",
+  "repository": "flosdor/delibee",
   "keywords": [
     "delibee",
     "delivery",
@@ -50,7 +50,7 @@
     "node": ">= 7.6"
   },
   "bugs": {
-    "url": "http://github.com/flosdor/delivery-tracking-middleware/issues",
+    "url": "http://github.com/flosdor/delibee/issues",
     "email": "iam@hyungdew.com"
   },
   "scripts": {
