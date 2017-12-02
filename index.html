@@ -55,21 +55,25 @@
     <table>
         <thead>
         <tr>
-            <th class="mobile-hide">택배사</th>
-            <th class="mobile-hide">송장번호</th>
-            <th>보낸이</th>
-            <th>받는이</th>
-            <th>배송상태</th>
+            <th>택배사</th>
+            <th>송장번호</th>
+            <th colspan="2">배송상태</th>
         </tr>
         </thead>
         <tbody>
         <tr>
-            <td class="mobile-hide">{%=o.deliveryCompany.name%}</td>
-            <td class="mobile-hide">{%=o.invoiceNumber%}</td>
-            <td>{%=o.senderName%}</td>
-            <td>{%=o.receiverName%}</td>
-            <td>{%=o.statusText%}</td>
+            <td>{%=o.deliveryCompany.name%}</td>
+            <td>{%=o.invoiceNumber%}</td>
+            <td colspan="2">{%=o.statusText%}</td>
         </tr>
+        {% if (o.senderName && o.receiverName) { %}
+        <tr>
+            <th>보낸이</th>
+            <td>{%=o.senderName%}</td>
+            <th>받는이</th>
+            <td>{%=o.receiverName%}</td>
+        </tr>
+        {% } %}
         </tbody>
     </table>
     <br>
