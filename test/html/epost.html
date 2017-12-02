@@ -1,0 +1,1176 @@
+<!doctype html>
+<html lang="ko">
+<head>
+    <meta charset='utf-8' />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, target-densitydpi=medium-dpi" />
+    <title>배송조회 | 인터넷우체국</title>
+
+    <!-- html5 미지원 브라우저를 위한 설정 -->
+    <!--[if lte IE 9]>
+    <script type="text/javascript" src="/jscripts/comm/html5.js" ></script>
+    <![endif]-->
+    <!-- //html5 미지원 브라우저를 위한 설정 -->
+
+
+    <link rel="stylesheet" type="text/css" href="https://m.epost.go.kr/css/html5Reset.css" />
+    <link rel="stylesheet" type="text/css" href="https://m.epost.go.kr/css/media_style2.css" />
+    <link href="https://m.epost.go.kr/images/comm/epost_round.png" rel="apple-touch-icon-precomposed">
+    <script type="text/javascript" language="javascript" src="https://m.epost.go.kr/jscripts/comm/jquery-1.9.1.min.js"></script>
+    <script type="text/javascript" language="javascript" src="https://m.epost.go.kr/jscripts/comm/n_common.js" ></script>
+    <script type="text/javascript" language="javascript" src="https://m.epost.go.kr/js/title_common.js" ></script>
+    <script>
+
+
+
+
+      /////////////////////////////////////////////
+
+
+
+    </script>
+
+    <script type="text/javascript">
+      //<![CDATA[
+
+      // 우체국정보 상세조회
+      function goPostDetail(pcode, eventnm) {
+        //윈도우 팝업 생성 변경 (기존의 네비게이션을 제거 하면서 return Jsp 로 포워드 하게 변경) 2012.04.09 이철재
+        window.open('','poInfo','width=330,height=232,toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=no,resizable=no');
+        document.poInfoForm.target_command.value = "kpl.tts.tt.epost.cmd.RetrievePostOfficeInfoCmd";
+        document.poInfoForm.JspURI.value = "/xtts/tt/epost/trace/post_detail.jsp";
+        document.poInfoForm.regiPoCd.value=pcode;
+        document.poInfoForm.target = "poInfo";
+        document.poInfoForm.submit();
+        return false;
+      }
+
+      function postDeliveryHistory(detail){
+        createiFrame("/mobile/mypage/postDeliveryHistory.jsp?isDetail="+detail);
+        return false;
+      }
+
+
+
+
+      var todoDB = (function() {
+        var tDB = {};
+        var datastore = null;
+
+        tDB.open = function(callback) {
+          var version = 1;
+          var request = indexedDB.open('epostDelivery', version);
+
+          request.onupgradeneeded = function(e) {
+            var db = e.target.result;
+            e.target.transaction.onerror = tDB.onerror;
+            if (db.objectStoreNames.contains('Delivery')) {
+              db.deleteObjectStore('Delivery');
+            }
+            var store = db.createObjectStore('Delivery', {
+              keyPath: 'timestamp'
+            });
+          };
+
+          request.onsuccess = function(e) {
+            datastore = e.target.result;
+            if(callback != null)
+              callback();
+          };
+
+          request.onerror = tDB.onerror;
+        };
+
+        tDB.fetchTodos = function(callback) {
+          var db = datastore;
+          var transaction = db.transaction(['Delivery'], 'readwrite');
+          var objStore = transaction.objectStore('Delivery');
+
+          var keyRange = IDBKeyRange.lowerBound(0);
+          var cursorRequest = objStore.openCursor(keyRange);
+
+          var todos = [];
+
+          transaction.oncomplete = function(e) {
+            callback(todos);
+          };
+
+          cursorRequest.onsuccess = function(e) {
+            var result = e.target.result;
+
+            if (!!result == false) {
+              return;
+            }
+
+            todos.push(result.value);
+
+            result.continue();
+          };
+
+          cursorRequest.onerror = tDB.onerror;
+        };
+
+
+        tDB.createTodo = function(text, callback) {
+          var db = datastore;
+          var transaction = db.transaction(['Delivery'], 'readwrite');
+          var objStore = transaction.objectStore('Delivery');
+          var timestamp = new Date().getTime();
+          var todo = {
+            'text': text,
+            'timestamp': timestamp
+          };
+
+          var request = objStore.put(todo);
+          request.onsuccess = function(e) {
+            if(callback != null)
+              callback(todo);
+          };
+          request.onerror = tDB.onerror;
+        };
+
+        tDB.deleteTodo = function(id, callback) {
+          var db = datastore;
+          var transaction = db.transaction(['Delivery'], 'readwrite');
+          var objStore = transaction.objectStore('Delivery');
+
+          var request = objStore.delete(id);
+
+          request.onsuccess = function(e) {
+            if(callback != null)
+              callback();
+          }
+
+          request.onerror = function(e) {
+            console.log(e);
+          }
+        };
+        return tDB;
+      }());
+
+
+      $(window).load(function(){
+        todoDB.open(refesh);
+
+
+
+      });
+
+      function refesh(){
+        var num = "6863267801890";
+
+        todoDB.fetchTodos(function(todos){
+          var checkNum = 0;
+          var checkTimestamp = "";
+          for(var i = 0; i < todos.length; i++) {
+            var todo = todos[(todos.length - 1 - i)];
+
+            if(todo.text == num){
+              checkNum++;
+              checkTimestampb = todo.timestamp;
+            }
+          }
+
+          if(checkNum == 0){
+            todoDB.createTodo(num,null);
+          }else{
+            todoDB.deleteTodo(checkTimestampb,null);
+            todoDB.createTodo(num,null);
+          }
+        });
+
+      }
+
+
+
+      //]]>
+    </script>
+
+</head>
+<body>
+<!-- 우체국 정보를 불러오기 위한 폼 추가 -->
+<form method="post" name="poInfoForm" id="poInfoForm" action="http://trace.epost.go.kr/xtts/servlet/kpl.tts.common.svl.SttSVL" >
+    <input type="hidden" name="target_command" />
+    <input type="hidden" name="JspURI" />
+    <input type="hidden" name="regiPoCd" value="" />
+</form>
+<div class="wrapper no_sh">
+    <!-- Header Start -->
+    <div class="header">
+        <script type="text/javascript">
+          try {HeaderHtml('인터넷우체국');
+          }catch(e){alert(e);}
+        </script>
+    </div>
+    <!-- Header End -->
+    <article class="sub_content" id="con">
+        <h2 class="card mgma overh">
+            <span class="f_lft ih27">배송조회</span>
+            <button type="button"  class="f_rgt btn07" onclick="postDeliveryHistory('detail');" title="배송조회이력">배송조회이력</button>
+        </h2>
+
+
+        <h3 class="reg overh"><span class="ih27">세부정보</span></h3>
+        <table class="tb_guide">
+            <caption class="none">배송조회 세부정보</caption>
+            <colgroup>
+                <col style="width:80px;">
+                <col style="width:*;">
+            </colgroup>
+            <thead>
+            <tr>
+                <th scope="col">처리일시</th>
+                <th scope="col">시간</th>
+                <th scope="col">현재위치</th>
+                <th scope="col">처리현황</th>
+            </tr>
+            </thead>
+            <tbody>
+
+            <tr>
+                <td>2017.11.23</td>
+                <td>11:51</td>
+                <td>이천우체국<span style="font-size:10px;"><br />031.635.2001</span></td>
+                <td>
+                    집하완료
+
+
+
+
+
+
+                    <span class="tracered">&nbsp;</span>
+
+
+
+
+
+                </td>
+            </tr>
+
+
+            <tr>
+                <td>2017.11.23</td>
+                <td>11:54</td>
+                <td>이천우체국<span style="font-size:10px;"><br />031.635.2001</span></td>
+                <td>
+                    접수
+
+
+
+
+
+
+                    <span class="tracered">&nbsp;</span>
+
+
+
+
+
+                </td>
+            </tr>
+
+
+
+            <tr>
+                <td>2017.11.23</td>
+                <td>13:17</td>
+                <td>이천우체국<span style="font-size:10px;"><br />031.635.2001</span></td>
+                <td>
+                    발송
+                    &nbsp;<span class="tracered">&nbsp;</span>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td>2017.11.23</td>
+                <td>14:10</td>
+                <td>성남우편집중국<span style="font-size:10px;"><br />031.785.0154</span></td>
+                <td>
+                    도착
+                    &nbsp;<span class="tracered">&nbsp;</span>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td>2017.11.24</td>
+                <td>01:22</td>
+                <td>성남우편집중국<span style="font-size:10px;"><br />031.785.0154</span></td>
+                <td>
+                    발송
+                    &nbsp;<span class="tracered">&nbsp;</span>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td>2017.11.24</td>
+                <td>02:09</td>
+                <td>동서울우편집중국<span style="font-size:10px;"><br />02.450.6006</span></td>
+                <td>
+                    도착
+                    &nbsp;<span class="tracered">&nbsp;</span>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td>2017.11.24</td>
+                <td>06:50</td>
+                <td>동서울우편집중국<span style="font-size:10px;"><br />02.450.6006</span></td>
+                <td>
+                    발송
+                    &nbsp;<span class="tracered">&nbsp;</span>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td>2017.11.24</td>
+                <td>06:51</td>
+                <td>동대문우체국<span style="font-size:10px;"><br />02.2210.3703</span></td>
+                <td>
+                    도착
+                    &nbsp;<span class="tracered">&nbsp;</span>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td>2017.11.24</td>
+                <td>08:16</td>
+                <td>동대문우체국<span style="font-size:10px;"><br />02.2210.3703</span></td>
+                <td>
+                    배달준비
+                    집배원:김태성&nbsp;
+
+                </td>
+            </tr>
+
+            <tr>
+                <td>2017.11.24</td>
+                <td>10:27</td>
+
+                <td>동대문우체국<span style="font-size:10px;"><br />02.2210.3703</span></td>
+                <td>
+                    배달완료
+                    &nbsp;(<span class="tracered">&nbsp;배달&nbsp;</span>)
+                    (수령인:본인)
+                </td>
+            </tr>
+
+
+            </tbody>
+        </table>
+
+        <h3 class="reg overh"><span class="ih27">보내는분/받는분 정보</span></h3>
+        <table class="tb_guide">
+            <caption class="none">배송조회 보내는분/받는분 정보</caption>
+            <colgroup>
+                <col style="width:110px;">
+                <col style="width:*;">
+            </colgroup>
+            <tbody>
+            <tr>
+                <th scope="row" class="t_lft pdl10">보내는분</th>
+                <td class="t_lft pdl10">디*커버리 물류부</td>
+            </tr>
+            <tr>
+                <th scope="row" class="t_lft pdl10">받는분</th>
+                <td class="t_lft pdl10">권*주</td>
+            </tr>
+            </tbody>
+        </table>
+
+        <h3 class="reg overh"><span class="ih27">조회결과</span></h3>
+        <table class="tb_guide" summary="배송조회 조회결과">
+            <caption></caption>
+            <colgroup>
+                <col style="width:110px;">
+                <col style="width:*;">
+            </colgroup>
+            <tbody>
+            <tr>
+                <th scope="row" class="t_lft pdl10">등기번호</th>
+                <td class="t_lft pdl10">6863267801890</td>
+            </tr>
+            <tr>
+                <th scope="row" class="t_lft pdl10">우편물종류</th>
+                <td class="t_lft pdl10">소포</td>
+            </tr>
+            <tr>
+                <th scope="row" class="t_lft pdl10">취급구분</th>
+                <td class="t_lft pdl10">&nbsp;</td>
+            </tr>
+            <tr>
+                <th scope="row" class="t_lft pdl10">배달결과</th>
+                <td class="t_lft pdl10">배달완료</td>
+            </tr>
+            <tr>
+                <th scope="row" class="t_lft pdl10">최종변경일</th>
+                <td class="t_lft pdl10">2017.11.24</td>
+            </tr>
+            </tbody>
+        </table>
+
+        <p class="btntype">
+            <a href="javascript:history.back();" class="btn01 dpib pdlr40">확인</a>
+        </p>
+
+    </article>
+
+    <form name="tracefrm" id="tracefrm" type="POST" action="">
+        <input type="hidden" name="postNum" value="" />
+    </form>
+
+
+
+
+
+
+
+
+
+
+
+
+    <script>
+      var _mobileDeviceId_;
+      var _mobileDeviceVer_;
+      var viewCode = "";
+      tempDeviceId = "";
+
+      //네이티브앱일 경우 디바이스아이디 가져오기
+
+      // 쇼핑 헤더를 위한 스크립트 시작
+
+      function fn_gocate() {
+        location.href='';
+      }
+
+      function fn_gohome() {
+        location.href='';
+      }
+
+      function fn_gomypage() {
+        location.href='';
+      }
+
+      // 쇼핑 헤더를 위한 스크립트 종료
+      $(document).ready(function(){
+
+
+        $('.slink button').click(function(){
+          location.href = '';
+        });
+
+        $('.slink2 button').click(function(){
+          location.href = '';
+        });
+
+
+        $('.hlink button').click(function(){
+          location.href = 'https://m.epost.go.kr/mobile/index.jsp';
+        });
+
+
+
+        $('.nolink button').click(function(){
+          parent.location.href = '/index.jsp';
+            /*
+             <p onclick=" parent.location.href = '/index.jsp' "> 로고 </p>
+             */
+          // iFrameClose();
+          // location.href = 'http://m.epost.go.kr/mobile/index.jsp';
+
+        });
+      })
+
+      function getIVRid(){
+
+        $.getJSON("https://m.epost.go.kr/postal/mobile/mobile.mobileView.RetrieveUrlMobileID.postal",
+          {
+            "rtUrl" : window.location.pathname
+          },
+          function(idData) {
+            viewCode = idData.viewid;
+          },
+          function(e) {
+            alert(e);
+          }
+        );
+
+      }
+
+      function setFootVerCompare() {
+        var f = document.getElementById("setVersion");
+        var deviceVer = f.deviceVer.value;
+        var marketVer = f.marketVer.value;
+        var compareDeviceVer = deviceVer.split(".").join("");
+        var compareMarketVer = marketVer.split(".").join("");
+        if(compareMarketVer > compareDeviceVer){
+          var urlname = location.href;
+          var urlname2 = urlname.substring(urlname.length-9, urlname.length);
+          if("index.jsp" != urlname2){
+            location.href = 'https://m.epost.go.kr/mobile/index.jsp';
+          }
+        }
+      }
+      function bMemLoginEpost(button){
+        var f = document.getElementById("loginfrmMEPOST2");
+        if(button == 'button1'){
+          f.s_url.value  = 'https://m.epost.go.kr/parcel/mobile.RetrieveGeneralGubunLogin.parcel?isAllDelete=true&startGubun=C02';
+          //f.s_url2.value = 'https://m.epost.go.kr/parcel/mobile/NoMemberTermsAgree.jsp';
+          f.s_url2.value = 'https://m.epost.go.kr/parcel/mobile.RetrieveGeneralGubun.parcel?isAllDelete=true&isGuest=true&userType=5';
+        } else if (button == 'button2'){
+          f.s_url.value  = 'http://m.epost.go.kr/parcel/mobile.ParcelReturnLogin.parcel';
+          f.s_url2.value = 'http://m.epost.go.kr/parcel/mobile.ParcelReturnLogin.parcel';
+        } else if (button == 'button3'){
+          f.s_url.value  = 'https://m.epost.go.kr/ems/mobile.EmsApply1100c.postal';
+          //f.s_url2.value = 'http://m.epost.go.kr/postal/front/ems/mobile/NoMemberTermsAgree3.jsp';
+          f.s_url2.value = 'https://m.epost.go.kr/ems/mobile.EmsApply1100c.postal';
+        } else if (button == 'button4'){
+          f.s_url.value  = 'https://m.epost.go.kr/ems/mobile.EmsApply1100s.postal';
+          //f.s_url2.value = 'http://m.epost.go.kr/postal/front/ems/mobile/NoMemberTermsAgree4.jsp';
+          f.s_url2.value  = 'https://m.epost.go.kr/ems/mobile.EmsApply1100s.postal';
+        } else if (button == 'button5'){
+          f.s_url.value  = 'https://m.epost.go.kr/ems/mobile.EmsApply1100s.postal?ctype=c2';
+          //f.s_url2.value = 'http://m.epost.go.kr/postal/front/ems/mobile/NoMemberTermsAgree4.jsp';
+          f.s_url2.value  = 'https://m.epost.go.kr/ems/mobile.EmsApply1100s.postal?ctype=c2';
+        }
+
+        f.action = "https://m.epost.go.kr/mobile/login/cafzc008k01.jsp";
+        f.submit();
+      }
+      function getDeviceId() {
+
+        try{
+          window.webkit.messageHandlers.jscall.postMessage("getDeviceId");
+        }catch(err){
+          window.location = 'jscall://getDeviceId';
+        }
+
+      }
+      function setDeviceId(arg) {
+
+        if ((arg == null) || (arg == "") || (arg == "null")) {
+          _mobileDeviceId_ = "";
+          _gMobileDeviceId_ = "";
+          tempDeviceId = "";
+        } else {
+          _mobileDeviceId_ = arg;
+          _gMobileDeviceId_ = arg;
+          tempDeviceId = arg;
+        }
+
+        getVersion();
+      }
+      function getVersion() {
+
+        try{
+          window.webkit.messageHandlers.jscall.postMessage("getVersion");
+        }catch(err){
+          window.location = 'jscall://getVersion';
+        }
+
+      }
+
+      function setVersion(arg) {
+        var f = document.getElementById("setVersion");
+
+        if ((arg == null) || (arg == '') || (arg == "null")) {
+          _mobileDeviceVer_ = "";
+        }else{
+          f.deviceVer.value = arg;
+          _mobileDeviceVer_ = arg;
+        }
+
+      }
+
+      function getMarketAppVersion() {
+        window.android.getMarketAppVersion();
+      }
+
+      function setMarketAppVersion(arg) {
+        if ((arg == null) || (arg == '') || (arg == "null")) {
+          _mobileDeviceVer_ = "";
+        }else{
+          _mobileDeviceVer_ = arg;
+        }
+
+      }
+
+      function setPushOn(arg) {
+
+        try{
+          window.webkit.messageHandlers.jscall.postMessage("setPushOn");
+        }catch(err){
+          window.location = 'jscall://setPushOn';
+        }
+
+      }
+
+      function setPushOff(arg) {
+
+        try{
+          window.webkit.messageHandlers.jscall.postMessage("setPushOff");
+        }catch(err){
+          window.location = 'jscall://setPushOff';
+        }
+
+      }
+
+      function setPushCall(arg) {
+
+        try{
+          return window.webkit.messageHandlers.jscall.postMessage("setPush");
+        }catch(err){
+          return window.location = 'jscall://setPush';
+        }
+
+      }
+
+      function setPush(arg){
+        if(arg){
+          $('[name=checkbox]').prop('checked',true);
+        }else{
+          $('[name=checkbox]').prop('checked',false);
+        }
+      }
+      ////////////////////////////////////////////////////////
+
+      function setSmsAllimMarketVersion() {
+        var typeSmart = "";
+        var f = document.getElementById("setVersion");
+
+
+      }
+
+      function mobilePosttalkGo(){
+
+
+
+        try{
+          window.webkit.messageHandlers.jscall.postMessage("runPostTalk");
+        }catch(err){
+          window.location = 'jscall://runPostTalk';
+        }
+        type = "ios";
+
+      }
+
+      function setPostTalkVersion(arg){
+        _mobileDeviceVer_ = arg;
+      }
+
+      function runPostTalkCall(){
+        var type = "";
+        var loginVal;
+
+
+        loginVal = "N";
+
+
+
+        type = "ios";
+
+        location.href="https://posttalk.epost.go.kr:24933/kpic/post/mweb/event.html?deviceType="+type+"&deviceId="+_mobileDeviceId_+"&version="+_mobileDeviceVer_+"&login="+loginVal;
+      }
+
+      function runSmartIvrCall(phonenum, smartcode){
+
+        try{
+          window.webkit.messageHandlers.jscall.postMessage("getSmartIvrCAll:"+phonenum+":"+smartcode);
+        }catch(err){
+          window.location = "jscall://getSmartIvrCAll:"+phonenum+":"+smartcode;
+        }
+
+      }
+
+
+
+      function SetExpCookie( name, value, expiredays )
+      {
+        var todayDate = new Date();
+        todayDate.setDate( todayDate.getDate() + expiredays );
+        document.cookie = name + "=" + escape( value ) + "; path=/; domain=epost.go.kr; expires=" + todayDate.toGMTString() + ";";
+      }
+    </script>
+    <form name="setVersion" id="setVersion" method="post" action="">
+        <input type="hidden" name="deviceVer" value=""/>
+        <input type="hidden" name="marketVer" value=""/>
+        <input type="hidden" name="message" value=""/>
+    </form>
+    <form name="loginfrmMEPOST2"  id="loginfrmMEPOST2" method="post" action="">
+        <input type="hidden" name="s_url" value=""/>
+        <input type="hidden" name="s_url2" value=""/>
+        <input type="hidden" name="login" value="epost2"/>
+        <input type="hidden" name="webacc" value="epost2"/>
+    </form>
+    <footer>
+
+        <div  >
+            <div class="btn_footer">
+                <ul>
+
+                    <li><button type="button" onclick="location.href='https://m.epost.go.kr/mobile/index.jsp'">홈</button></li>
+
+                    <li><button type="button" onclick="history.back();return false;">이전</button></li>
+                    <li><button type="button" onclick="history.next();return false;">다음</button></li>
+                    <li><button type="button" onclick="location.href='https://m.epost.go.kr/mobile/mypage/mypage2.jsp'">마이페이지</button></li>
+
+
+                    <li><button type="button" onclick="location.href='tel:15881300'">콜센터연결</button></li>
+
+
+
+                </ul>
+            </div>
+        </div>
+    </footer>
+
+    <!-- layer popup start-->
+    <div class="mlayer_tak">
+        <div class="bg"></div>
+        <!-- 우편앱 설치-->
+        <div id="layertak" class="pop_layer">
+            <div class="m_box">
+                <h3>우편앱 설치</h3>
+                <div class="layer_box">
+                    <p class="ih18 mgt10">포스트톡은 우편앱에서 이용하실 수 있습니다.</p>
+                    <p class="ih18 mgt5 cred">설치하시겠습니까?</p>
+                </div>
+                <p class="btntype mgt10 t_cnt mgb10">
+                    <button type="button" class="btn04 br0 dpib pdlr20 cbtn2">취소</button>
+                    <button type="button" onclick="executeApp('우체국'); return false;" class="btn01 br0 dpib pdlr20 mgr2">설치</button>
+                </p>
+            </div>
+            <div><button type="button"  class="cbtn">close</button></div>
+        </div>
+        <!-- 우편앱 설치-->
+    </div>
+    <!-- layer popup end-->
+
+
+
+    <div class="all_bg"></div>
+    <script src="https://m.epost.go.kr/js/classie.js"></script>
+
+
+    <script>
+      var menuLeft = document.getElementById( 'cbp-spmenu-s1' ),
+        showLeft = document.getElementById( 'showLeft' ),
+        body = document.body;
+
+      showLeftPush.onclick = function() {
+
+        //classie.toggle( this, 'active' );
+        //classie.toggle( body, 'cbp-spmenu-push-toright' );
+        //classie.toggle( menuLeft, 'cbp-spmenu-open' );
+        //disableOther( 'showLeftPush' );
+
+        createiFrame_menu("https://m.epost.go.kr/mobile/inc/leftMenu.jsp")
+
+
+      };
+
+      $('.all_bg').click(function () {
+        classie.toggle( this, 'active' );
+        classie.toggle( body, 'cbp-spmenu-push-toright' );
+        classie.toggle( menuLeft, 'cbp-spmenu-open' );
+
+      })
+
+      $('.login .close').click(function () {
+        classie.toggle( this, 'active' );
+        classie.toggle( body, 'cbp-spmenu-push-toright' );
+        classie.toggle( menuLeft, 'cbp-spmenu-open' );
+
+      })
+
+      $('.btn_side').click(function () {
+        classie.toggle( this, 'active' );
+        classie.toggle( body, 'cbp-spmenu-push-toright' );
+        classie.toggle( menuLeft, 'cbp-spmenu-open' );
+
+      })
+
+
+      $(document).ready(function() {
+        // $('.side_menu > ul > li > button').click(function() {
+        // 	if( $(this).hasClass('active') ){
+        // 	$(this).next().slideUp();
+        // 		$(this).removeClass('active');
+        // 	}else{
+        // 		for( var i = 0 ; i < $('.side_menu > ul > li > button').length ; i++ ){
+        // 			if( $('.side_menu > ul > li > button').eq(i).hasClass('active') ) {
+        // 				$('.side_menu > ul > li > button').eq(i).removeClass('active');
+        // 				$('.side_menu > ul > li > ul').eq(i).slideUp();
+        // 			}
+        // 		}
+        // 		$(this).next().slideDown();
+        // 		$(this).addClass('active');
+        // 	}
+        // });
+
+        // 이거 다른거 선택할때 올리고 내리는거까지 해봤는데 되게 이상하네용
+
+        $('.menu2').find('button').click(function(){
+          if ( $(this).hasClass('active') ) {
+            $(this).removeClass('active');
+            $( '#mune'+$(this).data('menu')).slideUp();
+          } else {
+            $('.menu2').find('button').removeClass('active');
+            $(this).addClass('active');
+            $('.side_menu').hide();
+            $('.sub_menu2').hide();
+            $('.side_menu').show();
+            $( '#mune'+$(this).data('menu')).slideDown();
+          }
+        })
+
+
+        //네이티브앱일 경우 디바이스아이디 가져오기
+
+
+      });
+
+      SetExpCookie("s_url","",-1);
+      SetExpCookie("s_hm_url","",-1);
+      SetExpCookie("s_mp_url","",-1);
+      SetExpCookie("s_cg_url","",-1);
+
+      function getDeviceId() {
+
+        window.location = 'jscall://getDeviceId';
+
+      }
+
+      function setDeviceId(arg) {
+        //test deviceId
+        //arg = "APA91bHWv4QMq4Xvn_Jo6Cl1zFqGh0krPWGAM1aJabt9AL5J86UQevTEWFBkkYyy_1mhtx07AqpUtJ342feUaWIyHefAY3u1ukJAPOVSVddNVaipm-NhCnW4xLRuj_wbd6mDhrhANA3r_egCwKzFj4WGGkyK7oRSxSxYIkjMrRfz6jX5JJIx0hE";
+
+        if ((arg == null) || (arg == "") || (arg == "null")) {
+          _mobileDeviceId_ = "";
+
+        } else {
+          _mobileDeviceId_ = arg;
+        }
+
+        getVersion();
+      }
+
+      function getVersion() {
+
+        window.location = 'jscall://getVersion';
+
+      }
+
+      function setVersion(arg) {
+
+        if ((arg == null) || (arg == '') || (arg == "null")) {
+          _mobileDeviceVer_ = "";
+        }else{
+          _mobileDeviceVer_ = arg;
+        }
+        var testMarketVer= "1.1.4";													//test
+        var deviceVer		= Number(testMarketVer.replace(/\./g, ""));
+        var marketVer		= Number(arg.replace(/\./g, ""));						//test
+
+        if (deviceVer < marketVer) {
+          alert("앱 버전이 낮아 진행이 불가능합니다. 버전 업데이트를 위해 마켓으로 이동합니다.");
+        }
+
+      }
+
+      function getMarketAppVersion() {
+        window.android.getMarketAppVersion();
+      }
+
+      function setMarketAppVersion(arg) {
+        if ((arg == null) || (arg == '') || (arg == "null")) {
+          _mobileDeviceVer_ = "";
+        }else{
+          _mobileDeviceVer_ = arg;
+        }
+
+        var testMarketVer= "1.1.4";													//test
+        var deviceVer		= Number(testMarketVer.replace(/\./g, ""));
+        var marketVer		= Number(arg.replace(/\./g, ""));						//real
+
+//		if (deviceVer < marketVer) {
+//			alert("앱 버전이 낮아 진행이 불가능합니다. 버전 업데이트를 위해 마켓으로 이동합니다.");
+//			window.location.replace("https://m.epost.go.kr/hybrid.app.mall?&extweb=true");
+//		}
+      }
+
+      ////////////////////////////////////////////////////
+      ////푸쉬설정
+      ////////////////////////////////////////////////////
+      function setPushOn(arg) {
+
+        window.location = 'jscall://setPushOn';
+
+      }
+
+      function setPushOff(arg) {
+
+        window.location = 'jscall://setPushOff';
+
+      }
+
+      function setPushCall(arg) {
+
+        return window.location = 'jscall://setPush';
+
+      }
+
+      function setPush(arg){
+        alert(arg);
+        if(arg == "false"){
+          $('[name=checkbox]').prop('checked',true);
+        }else if(arg == "true"){
+          $('[name=checkbox]').prop('checked',false);
+        }
+      }
+      ////////////////////////////////////////////////////////
+
+      function mobilePasswdClick(){
+        window.location = 'toapp:setkeycrypt:0 withRequestId:96684489 andServerKey:10fde047e767b69e05bd9391168f3fe185a1266475862c392a7b24170a571ead51b95e1732a3482375581ae6fac1c6dd182b85988b6513b5867f3640e8897535dfebf5a4874445eb2b67e33f49f3c9537d3e7ddbda919791e6b3b1783c403bf951f463b909d7762d2104739a10dac1e408bf653802498e9a1ee91d99314f4afea1e502b47a5aeb47e8004b35f6883991128d6a575dba877abcc322ff8aeb2e71c693ee32d2cb56f343c172b2babc02f337874503c5c316bdb2fd7488538ae6f442bffdfb435a68160db869d1634b8edb54d5bab3e5b81abd687a2e0a249e83b68e2b7e40bf2fd0e11b9731f524abb1013d030981e7e339716dcd595ce3750e1c83c1c8fd563915d9e0e9dc77e03b913b5cf12bc6ed8b1e593ea8ee17a1cc90955c3443facc6c782c7946aeedcdcf9bb27219ed356334c09d069a4c06333c871e0e45e33e8124887b8b238eff1f7911ae5ad5d3c56c327847f4da284d660ec104e77c29e6229dd43711edaf1673da2073eab38af2e2428bb35650b664fe46a84ead64591bd81504ff882bad304a595f84253db259a3f5858addc8b1dad863ccc6ff12c99b18d6a63efbcdbdcc6840b61b3b7b7fc2fe1e07edbe88a4966a2746aef6211610324176e6597f00bfc4af04ef22cdbdc087bb42608e881e6f962b3c50f180808d48b6ddffabe884bc31eb35b86aadc4db5715ec03289e95dcbc81fd8d915bef4f7ba754ce21b526e478fa9e140c68977dcee1df70ae1ba68a0952df56';
+      }
+
+      //포스트톡 링크시 jscall
+      function mobilePosttalkGo(){
+        //운영 : https://posttalk.epost.go.kr:24933
+        //개발 : http://impdev.lgcns.com:18001
+        //192.168.50.111
+
+        window.location = 'jscall://runPostTalk';
+        type = "ios";
+
+        //window.location = "http://impdev.lgcns.com/kpic/post/mweb/event.html?deviceType="+type+"&deviceId="+_mobileDeviceId_+"&version="+_mobileDeviceVer_;
+        //window.location.replace("http://impdev.lgcns.com:18001/kpic/post/mweb/event.html?deviceType="+type+"&deviceId="+_mobileDeviceId_+"&version="+_mobileDeviceVer_+"&login="+loginVal);
+      }
+
+      function setPostTalkVersion(arg){
+        _mobileDeviceVer_ = arg;
+      }
+
+      function runPostTalkCall(){
+        var type = "";
+        var loginVal;
+
+
+        loginVal = "N";
+
+
+
+        type = "ios";
+
+
+        //포스트톡 대내 Test 서버
+        //location.href="http://192.168.50.111:18001/kpic/post/mweb/event.html?deviceType="+type+"&deviceId="+_mobileDeviceId_+"&version="+_mobileDeviceVer_+"&login="+loginVal;
+        //포스트톡 개발서버
+        location.href="http://impdev.lgcns.com/kpic/post/mweb/event.html?deviceType="+type+"&deviceId="+_mobileDeviceId_+"&version="+_mobileDeviceVer_+"&login="+loginVal;
+        //포스트톡 운영서버
+        //location.href="https://posttalk.epost.go.kr:24933/kpic/post/mweb/event.html?deviceType="+type+"&deviceId="+_mobileDeviceId_+"&version="+_mobileDeviceVer_+"&login="+loginVal;
+      }
+
+      //사이드메뉴 앱실행 or 설치
+      function mobileExecuteApp(selectedApp){
+        if(selectedApp=='우체국쇼핑'){
+
+          window.location = 'jscall://runPostShop';
+
+        }else if(selectedApp=='한국우표포털'){
+
+          window.location = 'jscall://runStampPortal';
+
+        }else if(selectedApp=='스마트뱅킹'){
+
+          window.location = 'jscall://runSmartBanking';
+
+        }else if(selectedApp=='우체국계약고객'){
+
+          try{
+            window.webkit.messageHandlers.jscall.postMessage("runMbiz");
+          }catch(err){
+            window.location = 'jscall://runMbiz';
+          }
+
+        }
+      }
+
+
+      //////////////////////// asis ////////////////////////////////
+      /**
+       *-----------------------------
+       *	우체국찾기 앱
+       *-----------------------------
+       * 안드로이드
+       * 1. postpay : com.epost.psf.ss
+       * 2. 스마트뱅킹 : com.epost.psf.sdsi
+       * 3. 한국우표포털 : kr.iconlab.MStampPortal
+       * 4. 우체국쇼핑 : kr.go.epost.mobile.app
+       *
+       * 아이폰
+       * 1.postpay
+       *   https://itunes.apple.com/us/app/postpay/id560038270?l=ko&ls=1&mt=8
+       *	 번들 ID : com.epost.psf.ssi
+       * 2.스마트뱅킹
+       *   https://itunes.apple.com/us/app/uchegug-seumateubaengking/id554920991?l=ko&ls=1&mt=8
+       *   번들 ID : com.epost.psf.sd
+       * 3.한국우표포털
+       *   https://itunes.apple.com/us/app/hangug-upyopoteol/id435914138?l=ko&ls=1&mt=8
+       *   번들 ID : kr.epost.MStampPortal
+       * 4.우체국쇼핑
+       *   https://itunes.apple.com/us/app/uchegugsyopingmol/id960556882?l=ko&ls=1&mt=8
+       *   번들 ID : kr.go.epost.shopping
+       */
+      var isIPHONE = (navigator.userAgent.match('iPhone') != null || navigator.userAgent.match('iPod') != null);
+      var isIPAD = (navigator.userAgent.match('iPad') != null);
+      var isANDROID = (navigator.userAgent.match('Android') != null);
+      var isWINMOBILE =(navigator.userAgent.match('Windows Phone') != null)
+
+      //IOS 앱 설치 URL
+      var APP_INSTALL_URL_IOS_MAIL_SEVICE 	= "itms://itunes.apple.com/kr/app/id469377322?mt=8"; //우체국우편
+      var APP_INSTALL_URL_IOS_SEARCH_POST 	= "itms://itunes.apple.com/kr/app/id435913308?mt=8"; //우체국찾기
+      var APP_INSTALL_URL_IOS_FINDZIPCODE 	= "itms://itunes.apple.com/kr/app/id435940000?mt=8"; //우체국
+      var APP_INSTALL_URL_IOS_SHOPPING 		= "itms://itunes.apple.com/us/app/uchegugsyopingmol/id960556882?l=ko&ls=1&mt=8"; //우체국쇼핑
+      var APP_INSTALL_URL_IOS_STAMP_PORTAL    = "itms://itunes.apple.com/us/app/hangug-upyopoteol/id435914138?l=ko&ls=1&mt=8"; //한국우표포털
+      var APP_INSTALL_URL_IOS_SMART_BANKING 	= "itms://itunes.apple.com/us/app/uchegug-seumateubaengking/id554920991?l=ko&ls=1&mt=8"; //스마트뱅킹
+      var APP_INSTALL_URL_IOS_POST_PAY 	    = "itms://itunes.apple.com/us/app/postpay/id560038270?l=ko&ls=1&mt=8"; //PostPay
+      var APP_INSTALL_URL_IOS_MBIZ 	    	= "itms://itunes.apple.com/us/app/postpay/id1211098048?l=ko&ls=1&mt=8"; //우체국계약고객
+
+      //ANDROID 앱 설치 URL
+      var APP_INSTALL_URL_ANDROID_MAIL_SEVICE 	= "market://details?id=kr.go.epost.app.mailService"; //우체국우편
+      var APP_INSTALL_URL_ANDROID_SEARCH_POST 	= "market://details?id=kr.iconlab.MSearchPost"; //우체국찾기
+      var APP_INSTALL_URL_ANDROID_FINDZIPCODE 	= "market://details?id=kr.go.epost.app.findZip"; //우체국
+      var APP_INSTALL_URL_ANDROID_SHOPPING        = "http://www.epost.go.kr/smart/appDown3.jsp";
+      var APP_INSTALL_URL_ANDROID_STAMP_PORTAL 	= "market://details?id=kr.iconlab.MStampPortal"; //한국우표포털
+      var APP_INSTALL_URL_ANDROID_SMART_BANKING 	= "market://details?id=com.epost.psf.sdsi"; //스마트뱅킹
+      var APP_INSTALL_URL_ANDROID_POST_PAY 	    = "market://details?id=com.epost.psf.ss"; //PostPay
+      var APP_INSTALL_URL_ANDROID_MBIZ	 		= "market://details?id=mbiz.app.epost.go.kr.mbiz"; //우체국계약고객
+
+      //WINMOBILE 앱 설치 URL
+      var APP_INSTALL_URL_WIN_FINDZIPCODE 	= "zune://navigate/?appid=f8a10b0b-3b58-4776-9792-321b13ff7a02";//우체국
+
+      //앱 실행 URL
+      var APP_EXECUTE_URL_MAIL_SEVICE 	= "sppspostoffice://"; 		//우체국우편 (11.15반영)
+      var APP_EXECUTE_URL_SEARCH_POST 	= "MSearchPost://"; 		//우체국찾기
+      var APP_EXECUTE_URL_FINDZIPCODE 	= "sppspostnumber://"; 	//우체국 (11.29반영)
+      var APP_EXECUTE_URL_SHOPPING 		= "sppsshopping://"; 		//우체국쇼핑 (11.15반영)
+      var APP_EXECUTE_URL_STAMP_PORTAL 	= "MStampPortal://"; 		//한국우표포털
+      var APP_EXECUTE_URL_SMART_BANKING 	= ""; 		//스마트뱅킹
+      var APP_EXECUTE_URL_POST_PAY 	    = ""; 		//PostPay
+      var APP_EXECUTE_URL_MBIZ 	    	= ""; 		//우체국계약고객
+
+      function executeApp(selectedApp) {
+        installApp(selectedApp);
+
+        if (isIPHONE || isIPAD) {
+          if(selectedApp=='우체국'){
+            window.location.href = APP_EXECUTE_URL_FINDZIPCODE;
+          }else if(selectedApp=='우체국우편'){
+            window.location.href = APP_EXECUTE_URL_MAIL_SEVICE;
+          }else if(selectedApp=='우체국쇼핑'){
+            //window.location.href = APP_EXECUTE_URL_SHOPPING;
+            window.location.href = APP_INSTALL_URL_IOS_SHOPPING;
+          }else if(selectedApp=='한국우표포털'){
+            window.location.href = APP_EXECUTE_URL_STAMP_PORTAL;
+          }else if(selectedApp=='우체국찾기'){
+            window.location.href = APP_EXECUTE_URL_SEARCH_POST;
+          }else if(selectedApp=='스마트뱅킹'){
+            window.location.href = APP_INSTALL_URL_IOS_SMART_BANKING;
+          }else if(selectedApp=='PostPay'){
+            window.location.href = APP_INSTALL_URL_IOS_POST_PAY;
+          }else if(selectedApp=='우체국계약고객'){
+            window.location.href = APP_INSTALL_URL_IOS_MBIZ;
+          }
+        }else if (isANDROID){
+          if(selectedApp=='우체국'){
+            document.getElementById("applinkDiv").innerHTML = '<iframe src="' + APP_EXECUTE_URL_FINDZIPCODE + '" width="0" height="0" frameborder="0"></iframe>';
+          }else if(selectedApp=='우체국우편'){
+            document.getElementById("applinkDiv").innerHTML = '<iframe src="' + APP_EXECUTE_URL_MAIL_SEVICE + '" width="0" height="0" frameborder="0"></iframe>';
+          }else if(selectedApp=='우체국쇼핑'){
+            //document.getElementById("applinkDiv").innerHTML = '<iframe src="' + APP_EXECUTE_URL_SHOPPING + '" width="0" height="0" frameborder="0"></iframe>';
+            document.getElementById("applinkDiv").innerHTML = '<iframe src="' + APP_INSTALL_URL_ANDROID_SHOPPING + '" width="0" height="0" frameborder="0"></iframe>';
+          }else if(selectedApp=='한국우표포털'){
+            document.getElementById("applinkDiv").innerHTML = '<iframe src="' + APP_EXECUTE_URL_STAMP_PORTAL + '" width="0" height="0" frameborder="0"></iframe>';
+          }else if(selectedApp=='우체국찾기'){
+            document.getElementById("applinkDiv").innerHTML = '<iframe src="' + APP_EXECUTE_URL_SEARCH_POST + '" width="0" height="0" frameborder="0"></iframe>';
+          }else if(selectedApp=='스마트뱅킹'){
+            document.getElementById("applinkDiv").innerHTML = '<iframe src="' + APP_INSTALL_URL_ANDROID_SMART_BANKING + '" width="0" height="0" frameborder="0"></iframe>';
+          }else if(selectedApp=='PostPay'){
+            document.getElementById("applinkDiv").innerHTML = '<iframe src="' + APP_INSTALL_URL_ANDROID_POST_PAY + '" width="0" height="0" frameborder="0"></iframe>';
+          }else if(selectedApp=='우체국계약고객'){
+            document.getElementById("applinkDiv").innerHTML = '<iframe src="' + APP_INSTALL_URL_IOS_MBIZ + '" width="0" height="0" frameborder="0"></iframe>';
+          }
+
+          setTimeout(function(){
+            var b = document.getElementById("applinkDiv");
+            var c = b.getElementsByTagName('iframe');
+            if (c.length > 0) { b.removeChild(c[0]); }
+          }, 1000);
+
+        }
+      }
+
+      function installApp(selectedApp){
+        var b = new Date();
+        setTimeout(function(){
+          if (new Date() - b < 1500) {
+            if (isIPHONE || isIPAD) {
+              if(selectedApp=='우체국'){
+                window.location.href = APP_INSTALL_URL_IOS_FINDZIPCODE;
+              }else if(selectedApp=='우체국우편'){
+                window.location.href = APP_INSTALL_URL_IOS_MAIL_SEVICE;
+              }else if(selectedApp=='우체국쇼핑'){
+                window.location.href = APP_INSTALL_URL_IOS_SHOPPING;
+              }else if(selectedApp=='한국우표포털'){
+                window.location.href = APP_INSTALL_URL_IOS_STAMP_PORTAL;
+              }else if(selectedApp=='우체국찾기'){
+                window.location.href = APP_INSTALL_URL_IOS_SEARCH_POST;
+              }else if(selectedApp=='스마트뱅킹'){
+                window.location.href = APP_INSTALL_URL_IOS_SMART_BANKING;
+              }else if(selectedApp=='PostPay'){
+                window.location.href = APP_INSTALL_URL_IOS_POST_PAY;
+              }else if(selectedApp=='우체국계약고객'){
+                window.location.href = APP_INSTALL_URL_IOS_MBIZ;
+              }
+            } else if (isANDROID) {
+              if(selectedApp=='우체국'){
+                window.location.href = APP_INSTALL_URL_ANDROID_FINDZIPCODE;
+              }else if(selectedApp=='우체국우편'){
+                window.location.href = APP_INSTALL_URL_ANDROID_MAIL_SEVICE;
+              }else if(selectedApp=='우체국쇼핑'){
+                window.location.href = APP_INSTALL_URL_ANDROID_SHOPPING;
+              }else if(selectedApp=='한국우표포털'){
+                window.location.href = APP_INSTALL_URL_ANDROID_STAMP_PORTAL;
+              }else if(selectedApp=='우체국찾기'){
+                window.location.href = APP_INSTALL_URL_ANDROID_SEARCH_POST;
+              }else if(selectedApp=='스마트뱅킹'){
+                window.location.href = APP_INSTALL_URL_ANDROID_SMART_BANKING;
+              }else if(selectedApp=='PostPay'){
+                window.location.href = APP_INSTALL_URL_ANDROID_POST_PAY;
+              }else if(selectedApp=='우체국계약고객'){
+                window.location.href = APP_INSTALL_URL_ANDROID_MBIZ;
+              }
+            }else if (isWINMOBILE){
+              if (confirm(selectedApp + " 앱을 설치하시겠습니까?")) {
+                if(selectedApp=='우체국'){
+                  window.location.href =APP_INSTALL_URL_WIN_FINDZIPCODE;
+                }
+              }
+            }
+          }
+        }, 500);
+      }
+      ///////////////////////////////////////////////////////////////////
+    </script>
+</div>
+
+<script type="text/javascript" src="https://m.epost.go.kr/js/head_common.js"></script>
+</body>
+</html>

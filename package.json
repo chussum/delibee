@@ -1,0 +1,60 @@
+{
+  "name": "delivery-tracking-middleware",
+  "description": "Node.js delivery tracking middleware",
+  "version": "0.0.1",
+  "author": {
+    "name": "Hyungjoo Kwon",
+    "email": "iam@hyungdew.com",
+    "url": "http://blog.hyungdew.com/"
+  },
+  "contributors": [
+    "Hyungjoo Kwon <iam@hyungdew.com>"
+  ],
+  "license": "MIT",
+  "repository": "flosdor/delivery-tracking-middleware",
+  "keywords": [
+    "delibee",
+    "delivery",
+    "tracking",
+    "delivery tracking",
+    "택배",
+    "택배 추적",
+    "배송",
+    "택배 배송"
+  ],
+  "dependencies": {
+    "axios": "0.17.1",
+    "cheerio": "1.0.0-rc.2",
+    "iconv": "2.3.0",
+    "moment": "2.19.2",
+    "puppeteer": "0.13.0"
+  },
+  "devDependencies": {
+    "chai": "^4.1.2",
+    "eslint": "4.11.0",
+    "eslint-config-standard": "10.2.1",
+    "eslint-plugin-import": "2.8.0",
+    "eslint-plugin-markdown": "1.0.0-beta.6",
+    "eslint-plugin-node": "5.2.1",
+    "eslint-plugin-promise": "3.6.0",
+    "eslint-plugin-standard": "3.0.1",
+    "mocha": "4.0.1"
+  },
+  "files": [
+    "lib/",
+    "LICENSE",
+    "HISTORY.md",
+    "index.js"
+  ],
+  "engines": {
+    "node": ">= 7.6"
+  },
+  "bugs": {
+    "url": "http://github.com/flosdor/delivery-tracking-middleware/issues",
+    "email": "iam@hyungdew.com"
+  },
+  "scripts": {
+    "lint": "eslint --plugin markdown --ext js,md .",
+    "test": "node ./node_modules/mocha/bin/mocha --recursive ./**/*.spec.js"
+  }
+}
