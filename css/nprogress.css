@@ -21,7 +21,7 @@
     right: 0px;
     width: 100px;
     height: 100%;
-    box-shadow: 0 0 10px #000, 0 0 5px #000;
+    box-shadow: 0 0 10px #fff, 0 0 5px #fff;
     opacity: 1.0;
 
     -webkit-transform: rotate(3deg) translate(0px, -4px);
