@@ -10,20 +10,20 @@ Feel free to submit issues and enhancement requests.
 ### On Express Framework
 ```
 const express = require('express')
-const tracker = require('delibee')({
+const delibee = require('delibee')({
   timeout: 10000
 })
 const app = express()
 
 app.get('/tracking/companies', async (req, res) => {
-  const companies = await tracker.company()
+  const companies = await delibee.company()
   res.send(companies)
 })
 
 app.get('/tracking', async (req, res) => {
   const company = req.query.company
   const invoiceNo = req.query.invoice_no
-  const invoice = await tracker.tracking(company, invoiceNo)
+  const invoice = await delibee.tracking(company, invoiceNo)
   res.send(invoice)
 })
 
