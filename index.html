@@ -103,6 +103,7 @@
     }
     deliveryCompany.disabled = invoiceNumber.disabled = btnTracking.disabled = true;
     NProgress.start();
+    NProgress.inc();
     axios
       .get('https://delibee.hyungdew.com/tracking', {
         params: {
@@ -111,6 +112,7 @@
         }
       })
       .then(function (res) {
+        NProgress.inc();
         var data = res.data;
         if (data.success && data.invoice) {
           document.getElementById('delibee-info').innerHTML = tmpl("delibee-info-template", data.invoice);
