@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en-us">
+<html lang="ko-kr">
 <head>
     <meta charset="UTF-8">
     <title>Delibee</title>
@@ -26,8 +26,9 @@
     <h2>Delibee API Test</h2>
     <p>
         <form onSubmit="tracking(); return false;">
-            <input id="invoiceNumber" type="text" value="">
-            <button class="btn btn-black" type="submit">Tracking</button>
+            <select id="delivery-company"></select>
+            <input id="invoice-number" type="text" value="">
+            <button id="btn-tracking" class="btn btn-black" type="submit">Tracking</button>
         </form>
         <div id="delibee-info"></div>
     </p>
@@ -42,11 +43,18 @@
 
 </section>
 
-<script type="text/x-tmpl" id="delibee-template">
+<script type="text/x-tmpl" id="delibee-company-template">
+    {% for (var key in o) { %}
+    <option value="{%=key%}">{%=o[key]%}</option>
+    {% } %}
+</script>
+
+<script type="text/x-tmpl" id="delibee-info-template">
     <table>
         <thead>
         <tr>
-            <th>송장번호</th>
+            <th class="mobile-hide">택배사</th>
+            <th class="mobile-hide">송장번호</th>
             <th>보낸이</th>
             <th>받는이</th>
             <th>배송상태</th>
@@ -54,20 +62,20 @@
         </thead>
         <tbody>
         <tr>
-            <td>{%=o.invoiceNumber%}</td>
+            <td class="mobile-hide">{%=o.deliveryCompany.name%}</td>
+            <td class="mobile-hide">{%=o.invoiceNumber%}</td>
             <td>{%=o.senderName%}</td>
             <td>{%=o.receiverName%}</td>
             <td>{%=o.statusText%}</td>
         </tr>
         </tbody>
     </table>
-    <hr>
+    <br>
     <table>
         <thead>
         <tr>
             <th>처리일시</th>
             <th>위치</th>
-            <th>전화번호</th>
             <th>배송상태</th>
         </tr>
         </thead>
@@ -76,7 +84,6 @@
         <tr>
             <td>{%=o.history[i].dateString%}</td>
             <td>{%=o.history[i].location%}</td>
-            <td>{%=o.history[i].tel%}</td>
             <td>{%=o.history[i].statusText%}</td>
         </tr>
         {% } %}
@@ -86,32 +93,43 @@
 
 <script>
   function tracking() {
-    var invoiceNumber = document.getElementById('invoiceNumber');
-    if (invoiceNumber.disabled) {
+    var deliveryCompany = document.getElementById('delivery-company');
+    var invoiceNumber = document.getElementById('invoice-number');
+    var btnTracking = document.getElementById('btn-tracking');
+    if (invoiceNumber.disabled || btnTracking.disabled) {
       return;
     }
-    invoiceNumber.disabled = true;
+    deliveryCompany.disabled = invoiceNumber.disabled = btnTracking.disabled = true;
     axios
       .get('https://delibee.hyungdew.com/tracking', {
         params: {
-          'company': 'epost',
+          'company': deliveryCompany.value,
           'invoice_no': invoiceNumber.value
         }
       })
       .then(function (res) {
         var data = res.data;
         if (data.success && data.invoice) {
-          document.getElementById('delibee-info').innerHTML = tmpl("delibee-template", data.invoice);
+          document.getElementById('delibee-info').innerHTML = tmpl("delibee-info-template", data.invoice);
         } else {
           data.message && alert(data.message);
           document.getElementById('delibee-info').innerHTML = '';
         }
-        invoiceNumber.disabled = false;
+        deliveryCompany.disabled = invoiceNumber.disabled = btnTracking.disabled = false;
       });
   }
-  axios.get('./README.md').then(function (res) {
-    document.getElementById('markdown-content').innerHTML = marked(res.data);
-  });
+  function loadDeliveryCompanies() {
+    axios.get('https://delibee.hyungdew.com/tracking/companies').then(function (res) {
+      document.getElementById('delivery-company').innerHTML = tmpl("delibee-company-template", res.data);
+    });
+  }
+  function loadReadme() {
+    axios.get('./README.md').then(function (res) {
+      document.getElementById('markdown-content').innerHTML = marked(res.data);
+    });
+  }
+  loadDeliveryCompanies();
+  loadReadme();
 </script>
 
 </body>

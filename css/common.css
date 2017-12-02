@@ -20,8 +20,17 @@ a:hover {
     text-decoration: underline;
 }
 
+select {
+    display: inline-block;
+    vertical-align: middle;
+    margin: 0 0 1rem;
+    height: 50px;
+    border: 1px solid #ddd;
+}
+
 input[type="text"] {
     display: inline-block;
+    vertical-align: middle;
     margin: 0 0 1rem;
     color: rgba(0, 0, 0, 0.7);
     border-color: rgba(0, 0, 0, 0.2);
@@ -29,11 +38,15 @@ input[type="text"] {
     border-width: 1px;
     border-radius: 0.3rem;
     outline: none;
+    height: 50px;
 }
 
 .btn {
     display: inline-block;
+    vertical-align: middle;
     margin-bottom: 1rem;
+    height: 50px;
+    line-height: 48px;
     color: rgba(255, 255, 255, 0.7);
     background-color: rgba(255, 255, 255, 0.08);
     border-color: rgba(255, 255, 255, 0.2);
@@ -68,20 +81,22 @@ input[type="text"] {
 
 @media screen and (min-width: 64em) {
     .btn {
-        padding: 0.75rem 1rem;
+        padding: 0 1rem;
     }
+    select,
     input[type="text"] {
-        padding: 0.9rem 1rem;
+        padding: 0 1rem;
     }
 }
 
 @media screen and (min-width: 42em) and (max-width: 64em) {
     .btn {
-        padding: 0.6rem 0.9rem;
+        padding: 0 0.9rem;
         font-size: 0.9rem;
     }
+    select,
     input[type="text"] {
-        padding: 0.7rem 0.9rem;
+        padding: 0 0.9rem;
         font-size: 0.9rem;
     }
 }
@@ -90,7 +105,7 @@ input[type="text"] {
     .btn {
         display: block;
         width: 100%;
-        padding: 0.75rem;
+        padding: 0 0.75rem;
         font-size: 0.9rem;
     }
 
@@ -99,10 +114,15 @@ input[type="text"] {
         margin-left: 0;
     }
 
+    .mobile-hide {
+        display: none;
+    }
+
+    select,
     input[type="text"] {
         display: block;
         width: 100%;
-        padding: 0.7rem;
+        padding: 0 0.7rem;
         font-size: 0.9rem;
     }
 }
