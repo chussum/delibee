@@ -188,7 +188,3 @@ KG로지스 | @flosdor
 ## License
 
 [MIT LICENSE](LICENSE)
-
-
-
-
