@@ -112,8 +112,8 @@
         if (data.success && data.invoice) {
           document.getElementById('delibee-info').innerHTML = tmpl("delibee-info-template", data.invoice);
         } else {
-          data.message && alert(data.message);
           document.getElementById('delibee-info').innerHTML = '';
+          data.message && alert(data.message);
         }
         deliveryCompany.disabled = invoiceNumber.disabled = btnTracking.disabled = false;
       });
