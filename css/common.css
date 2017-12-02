@@ -79,7 +79,7 @@ input[type="text"] {
     border-color: rgba(0, 0, 0, 0.3);
 }
 
-.github-star {
+.github-button {
     position: absolute;
     top: 20px;
     right: 20px;
