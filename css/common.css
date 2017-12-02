@@ -79,10 +79,10 @@ input[type="text"] {
     border-color: rgba(0, 0, 0, 0.3);
 }
 
-.github-button {
+iframe {
     position: absolute;
     top: 20px;
-    right: 20px;
+    left: 20px;
 }
 
 @media screen and (min-width: 64em) {
