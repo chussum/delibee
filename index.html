@@ -85,7 +85,8 @@
         <tr>
             <th>처리일시</th>
             <th>위치</th>
-            <th>배송상태</th>
+            <th>배송상태 (Delibee 제공)</th>
+            <th>배송상태 (택배사 제공)</th>
         </tr>
         </thead>
         <tbody>
@@ -94,6 +95,7 @@
             <td>{%=o.history[i].dateString%}</td>
             <td>{%=o.history[i].location%}</td>
             <td>{%=o.history[i].statusText%}</td>
+            <td>{%=o.history[i].remark%}</td>
         </tr>
         {% } %}
         </tbody>
