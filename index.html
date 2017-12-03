@@ -57,17 +57,17 @@
 <script type="text/x-tmpl" id="delibee-info-template">
     <table>
         <thead>
-        <tr>
-            <th>택배사</th>
-            <th>송장번호</th>
-            <th colspan="2">배송상태</th>
-        </tr>
         </thead>
         <tbody>
         <tr>
+            <th>택배사</th>
             <td>{%=o.deliveryCompany.name%}</td>
+            <th>송장번호</th>
             <td>{%=o.invoiceNumber%}</td>
-            <td colspan="2">{%=o.statusText%}</td>
+        </tr>
+        <tr>
+            <th>배송상태</th>
+            <td colspan="3">{%=o.statusText%}</td>
         </tr>
         {% if (o.senderName && o.receiverName) { %}
         <tr>
