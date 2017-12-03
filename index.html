@@ -65,10 +65,6 @@
             <th>송장번호</th>
             <td>{%=o.invoiceNumber%}</td>
         </tr>
-        <tr>
-            <th>배송상태</th>
-            <td colspan="3">{%=o.statusText%}</td>
-        </tr>
         {% if (o.senderName && o.receiverName) { %}
         <tr>
             <th>보낸이</th>
@@ -77,6 +73,10 @@
             <td>{%=o.receiverName%}</td>
         </tr>
         {% } %}
+        <tr>
+            <th>배송상태</th>
+            <td colspan="3">{%=o.statusText%}</td>
+        </tr>
         </tbody>
     </table>
     <br>
