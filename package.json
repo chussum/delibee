@@ -55,6 +55,7 @@
   },
   "scripts": {
     "lint": "./node_modules/.bin/eslint --plugin markdown --ext js,md .",
-    "test": "./node_modules/.bin/mocha --recursive ./**/*.spec.js"
+    "test": "./node_modules/.bin/mocha --recursive ./**/*.spec.js",
+    "test-cov": "istanbul cover node_modules/.bin/mocha --recursive ./**/*.spec.js"
   }
 }

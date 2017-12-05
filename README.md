@@ -195,12 +195,11 @@ KG로지스 | @flosdor
 
 [MIT LICENSE](LICENSE)
 
-
 [npm-image]: https://img.shields.io/npm/v/delibee.svg
 [npm-url]: https://npmjs.org/package/delibee
 [travis-image]: https://img.shields.io/travis/flosdor/delibee/master.svg
 [travis-url]: https://travis-ci.org/flosdor/delibee
-[coveralls-image]: https://img.shields.io/coveralls/flosdor/delibee/master.svg
-[coveralls-url]: https://coveralls.io/r/flosdor/delibee?branch=master
+[coveralls-image]: https://coveralls.io/repos/github/flosdor/delibee/badge.svg
+[coveralls-url]: https://coveralls.io/github/flosdor/delibee
 [downloads-image]: https://img.shields.io/npm/dm/delibee.svg
 [downloads-url]: https://npmjs.org/package/delibee
