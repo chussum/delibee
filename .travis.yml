@@ -4,7 +4,8 @@ node_js:
   - 8.4
   - 8.9
 before_install:
-  - sudo ntpdate time.bora.net
+  - echo 'Asia/Seoul' | sudo tee /etc/timezone
+  - sudo dpkg-reconfigure --frontend noninteractive tzdata
   - npm install mocha eslint -g
 branches:
   only:
