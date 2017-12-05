@@ -1,0 +1,11 @@
+language: node_js
+node_js:
+  - 7.6
+  - 8.4
+  - 8.9
+sudo: false
+before_install:
+  - npm install mocha eslint -g
+branches:
+  only:
+    - master

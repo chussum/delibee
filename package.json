@@ -55,6 +55,6 @@
   },
   "scripts": {
     "lint": "eslint --plugin markdown --ext js,md .",
-    "test": "node ./node_modules/mocha/bin/mocha --recursive ./**/*.spec.js"
+    "test": "npm run lint && mocha --recursive ./**/*.spec.js"
   }
 }
