@@ -4,9 +4,7 @@ node_js:
   - 8.4
   - 8.9
 before_install:
-  - echo 'Asia/Seoul' | sudo tee /etc/timezone
-  - sudo dpkg-reconfigure --frontend noninteractive tzdata
-  - npm install mocha eslint -g
+ - export TZ=Asia/Seoul
 branches:
   only:
     - master
