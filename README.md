@@ -7,7 +7,7 @@
 
 <p align="center">
     <img src="docs/img/delibee.png" width="140" alt="delibee" /><br>
-    Delibee is delivery tracking library.
+    Delivery tracking library on Node.js.
 </p> 
 
 ## Prerequisites
