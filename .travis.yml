@@ -3,8 +3,11 @@ node_js:
   - 7.6
   - 8.4
   - 8.9
-before_install:
- - export TZ=Asia/Seoul
 branches:
   only:
     - master
+before_install:
+ - export TZ=Asia/Seoul
+ - npm install -g istanbul
+after_script:
+ - test -e ./coverage/lcov.info && npm install coveralls@2 && cat ./coverage/lcov.info | coveralls
