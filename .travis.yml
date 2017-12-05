@@ -3,8 +3,8 @@ node_js:
   - 7.6
   - 8.4
   - 8.9
-sudo: false
 before_install:
+  - sudo ntpdate time.bora.net
   - npm install mocha eslint -g
 branches:
   only:
