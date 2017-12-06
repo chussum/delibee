@@ -30,7 +30,7 @@
     "puppeteer": "0.13.0"
   },
   "devDependencies": {
-    "chai": "^4.1.2",
+    "chai": "4.1.2",
     "eslint": "4.11.0",
     "eslint-config-standard": "10.2.1",
     "eslint-plugin-import": "2.8.0",
@@ -56,6 +56,7 @@
   "scripts": {
     "lint": "./node_modules/.bin/eslint --plugin markdown --ext js,md .",
     "test": "./node_modules/.bin/mocha --recursive ./**/*.spec.js",
+    "test-cov": "istanbul cover ./node_modules/mocha/bin/_mocha --recursive ./**/*.spec.js",
     "test-travis": "istanbul cover ./node_modules/mocha/bin/_mocha --recursive ./**/*.spec.js --report lcovonly"
   }
 }
