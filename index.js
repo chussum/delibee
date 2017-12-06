@@ -4,12 +4,13 @@
  */
 
 const DeliveryCompany = require('./lib/models/DeliveryCompany')
+const DeliveryCompanyType = require('./lib/models/DeliveryCompanyType')
 
 module.exports = (options = {}) => {
   const delibee = require('./lib')(options)
   return {
     company: async () => {
-      return require('./lib/models/DeliveryCompanyType')
+      return DeliveryCompanyType
     },
     tracking: async (companyCode, invoiceNumber) => {
       try {
