@@ -1,7 +1,7 @@
 {
   "name": "delibee",
   "description": "Delibee is delivery tracking library.",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "author": {
     "name": "Hyungjoo Kwon",
     "email": "iam@hyungdew.com",
@@ -25,7 +25,7 @@
   "dependencies": {
     "axios": "0.17.1",
     "cheerio": "1.0.0-rc.2",
-    "iconv": "2.3.0",
+    "iconv-lite": "0.4.19",
     "moment": "2.19.2",
     "puppeteer": "0.13.0"
   },
