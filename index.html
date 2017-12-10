@@ -38,8 +38,10 @@
     <h2>Delibee API Test</h2>
     <p>
         <form onSubmit="tracking(); return false">
-            <select id="delivery-company"></select>
-            <input id="invoice-number" type="text" value="">
+            <select id="delivery-company">
+                <option value="">택배사 가져오는 중..</option>
+            </select>
+            <input id="invoice-number" type="text" value="" placeholder="송장번호 (- 제외)" onkeydown="return onKeyDownInvoiceNumber(event)" onkeyup='removeChar(event)'>
             <button id="btn-tracking" class="btn btn-black" type="submit">Tracking</button>
         </form>
         <div id="delibee-info"></div>
@@ -113,6 +115,24 @@
 </script>
 
 <script>
+  function onKeyDownInvoiceNumber (event) {
+    event = event || window.event;
+    var keyID = (event.which) ? event.which : event.keyCode;
+    if ((keyID >= 48 && keyID <= 57) || (keyID >= 96 && keyID <= 105) || keyID == 8 || keyID == 46 || keyID == 37 || keyID == 39) {
+      return;
+    } else {
+      return false;
+    }
+  }
+  function removeChar(event) {
+    event = event || window.event;
+    var keyID = (event.which) ? event.which : event.keyCode;
+    if (keyID == 8 || keyID == 46 || keyID == 37 || keyID == 39) {
+      return;
+    } else {
+      event.target.value = event.target.value.replace(/[^0-9]/g, "");
+    }
+  }
   function tracking () {
     var deliveryCompany = document.getElementById('delivery-company');
     var invoiceNumber = document.getElementById('invoice-number');
