@@ -53,6 +53,8 @@ CJ대한통운 | CJ
 롯데택배 (구. 현대택배) | LOTTE
 로젠택배 | LOGEN
 KG로지스 | LOGIS
+CVSnet 편의점택배 | CVSNET
+CU 편의점택배 | CU
 
 ## Response
 Key | Description
@@ -183,12 +185,14 @@ Contributors
 ----
 Company Name | Contributor
 ---- | ----
-우체국택배 | @flosdor
-CJ대한통운 | @flosdor
-한진택배 | @flosdor
-롯데택배 (구. 현대택배) | @flosdor
-로젠택배 | @flosdor
-KG로지스 | @flosdor
+우체국택배 | [@flosdor](https://github.com/flosdor)
+CJ대한통운 | [@flosdor](https://github.com/flosdor)
+한진택배 | [@flosdor](https://github.com/flosdor)
+롯데택배 (구. 현대택배) | [@flosdor](https://github.com/flosdor)
+로젠택배 | [@flosdor](https://github.com/flosdor)
+KG로지스 | [@flosdor](https://github.com/flosdor)
+CVSnet 편의점택배 | [@flosdor](https://github.com/flosdor)
+CU 편의점택배 | [@flosdor](https://github.com/flosdor)
 
 
 ## License
