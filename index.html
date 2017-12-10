@@ -6,14 +6,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <meta name="description" content="Delibee, 국내 택배 배송 추적 라이브러리"/>
     <meta name="keywords" content="delivery, tracking, delibee, 택배, 배송, 추적"/>
-    <link rel="stylesheet" type="text/css" href="css/nprogress.css" media="screen">
-    <link rel="stylesheet" type="text/css" href="css/normalize.css" media="screen">
-    <link rel="stylesheet" type="text/css" href="css/github-light.css" media="screen">
-    <link rel="stylesheet" type="text/css" href="css/common.css" media="screen">
-    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/0.3.6/marked.min.js"></script>
-    <script src="https://unpkg.com/nprogress@0.2.0/nprogress.js"></script>
-    <script src="js/tmpl.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="./css/nprogress.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="./css/normalize.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="./css/github-light.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="./css/common.css" media="screen">
+    <script src="./js/axios.min.js"></script>
+    <script src="./js/marked.min.js"></script>
+    <script src="./js/nprogress.js"></script>
+    <script src="./js/tmpl.min.js"></script>
 </head>
 <body>
 
@@ -62,7 +62,6 @@
     {% for (var key in o) { %}
     <option value="{%=key%}">{%=o[key]%}</option>
     {% } %}
-
 </script>
 
 <script type="text/x-tmpl" id="delibee-info-template">
@@ -111,20 +110,19 @@
         {% } %}
         </tbody>
     </table>
-
 </script>
 
 <script>
   function tracking () {
-    var deliveryCompany = document.getElementById('delivery-company')
-    var invoiceNumber = document.getElementById('invoice-number')
-    var btnTracking = document.getElementById('btn-tracking')
+    var deliveryCompany = document.getElementById('delivery-company');
+    var invoiceNumber = document.getElementById('invoice-number');
+    var btnTracking = document.getElementById('btn-tracking');
     if (invoiceNumber.disabled || btnTracking.disabled) {
-      return
+      return;
     }
-    deliveryCompany.disabled = invoiceNumber.disabled = btnTracking.disabled = true
-    NProgress.start()
-    NProgress.inc()
+    deliveryCompany.disabled = invoiceNumber.disabled = btnTracking.disabled = true;
+    NProgress.start();
+    NProgress.inc();
     axios
       .get('https://delibee.hyungdew.com/tracking', {
         params: {
@@ -133,33 +131,38 @@
         }
       })
       .then(function (res) {
-        NProgress.inc()
-        var data = res.data
+        NProgress.inc();
+        var data = res.data;
         if (data.success && data.invoice) {
-          document.getElementById('delibee-info').innerHTML = tmpl('delibee-info-template', data.invoice)
+          document.getElementById('delibee-info').innerHTML = tmpl('delibee-info-template', data.invoice);
         } else {
-          document.getElementById('delibee-info').innerHTML = ''
-          data.message && alert(data.message)
+          document.getElementById('delibee-info').innerHTML = '';
+          data.message && alert(data.message);
         }
-        deliveryCompany.disabled = invoiceNumber.disabled = btnTracking.disabled = false
-        NProgress.done()
+        deliveryCompany.disabled = invoiceNumber.disabled = btnTracking.disabled = false;
+        NProgress.done();
       })
       .catch(function () {
-        NProgress.done()
-      })
+        NProgress.done();
+      });
   }
   function loadDeliveryCompanies () {
+    NProgress.start();
     axios.get('https://delibee.hyungdew.com/tracking/companies').then(function (res) {
-      document.getElementById('delivery-company').innerHTML = tmpl('delibee-company-template', res.data)
+      document.getElementById('delivery-company').innerHTML = tmpl('delibee-company-template', res.data);
+      NProgress.done();
     })
+    .catch(function () {
+      NProgress.done();
+    });
   }
   function loadReadme () {
     axios.get('./README.md').then(function (res) {
-      document.getElementById('markdown-content').innerHTML = marked(res.data)
-    })
+      document.getElementById('markdown-content').innerHTML = marked(res.data);
+    });
   }
-  loadDeliveryCompanies()
   loadReadme()
+  loadDeliveryCompanies()
 </script>
 
 </body>
