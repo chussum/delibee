@@ -68,7 +68,7 @@ dateTime | 시간 (timestamp)
 dateString | 시간 (YYYY.MM.DD HH:mm)
 location | 위치
 tel | 전화번호
-remark | 택배사 제공 상태 한마디
+remark | 택배사 제공 배송상태
 statusCode | 배송상태코드
 statusText | 배송상태
 
