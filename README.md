@@ -1,9 +1,6 @@
 ## Prerequisites
 Node.js >= 7.6
 
-## Prerequisites
-Node.js >= 7.6
-
 ### Required Server Dependencies
 Delibee is use headless chrome for CJ대한통운.
 
