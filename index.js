@@ -7,7 +7,7 @@ const DeliveryCompany = require('./lib/models/DeliveryCompany')
 const DeliveryCompanyType = require('./lib/models/DeliveryCompanyType')
 
 module.exports = (options = {}) => {
-  const delibee = require('./lib')(options)
+  const delibee = require('./lib/crawler')(options)
   return {
     company: async () => {
       return DeliveryCompanyType
