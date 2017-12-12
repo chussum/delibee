@@ -33,7 +33,7 @@ Feel free to submit issues and enhancement requests.
 ```
 const express = require('express')
 const delibee = require('delibee')({
-  timeout: 10000,
+  timeout: 10000, // default timeout value is '10000'
   locale: 'en' // default locale is 'ko'
 })
 const app = express()
