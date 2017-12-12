@@ -17,14 +17,14 @@ describe('현대택배', () => {
     invoice.statusText.should.equal('인수확인')
   })
 
-  it('InvoiceHistory > 접수 대기', () => {
+  it('InvoiceHistory > 접수대기', () => {
     history[0].dateTime.should.equal(1509462000000)
     history[0].dateString.should.equal('2017.11.01 00:00')
     history[0].location.should.equal('안양(G)')
     history[0].tel.should.equal('031-460-7380')
     history[0].remark.should.equal('상품을 발송하기 위한 운송장을 발행하였습니다.')
     history[0].statusCode.should.equal(10)
-    history[0].statusText.should.equal('접수 대기')
+    history[0].statusText.should.equal('접수대기')
   })
 
   it('InvoiceHistory > 배송중(입고)', () => {
