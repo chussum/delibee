@@ -33,7 +33,8 @@ Feel free to submit issues and enhancement requests.
 ```
 const express = require('express')
 const delibee = require('delibee')({
-  timeout: 10000
+  timeout: 10000,
+  locale: 'en' // default locale is 'ko'
 })
 const app = express()
 
@@ -100,7 +101,7 @@ statusText | 배송상태
 StatusCode | StatusText
 ---- | ----
 -1 | 알수없음
-10 | 접수 대기
+10 | 접수대기
 11 | 잔류
 20 | 접수
 30 | 집하
@@ -122,60 +123,33 @@ StatusCode | StatusText
       "code": "CJ",
       "name": "CJ대한통운"
     },
-    "invoiceNumber": "340925749694",
-    "senderName": "밴*",
+    "invoiceNumber": "611020165296",
+    "senderName": "-",
     "senderAddr": "",
-    "receiverName": "전*",
+    "receiverName": "-",
     "receiverAddr": "",
-    "statusCode": 70,
-    "statusText": "배달완료",
-    "history": [
+    "history": Array[2][
       {
-        "dateTime": 1510831320000,
-        "dateString": "2017.11.16 20:22",
-        "location": "광진직영(엄현철)",
+        "dateTime": 1504700880000,
+        "dateString": "2017.09.06 21:28",
+        "location": "의정부",
         "tel": "",
-        "remark": "집화처리",
-        "statusCode": 30,
-        "statusText": "집하"
-      },
-      {
-        "dateTime": 1510862940000,
-        "dateString": "2017.11.17 05:09",
-        "location": "부곡4CP",
-        "tel": "",
-        "remark": "간선상차",
+        "remark": "물류터미널로 상품이 이동중입니다.",
         "statusCode": 40,
-        "statusText": "배송중(출고)"
+        "statusText": "Department of a shipment"
       },
       {
-        "dateTime": 1510882260000,
-        "dateString": "2017.11.17 10:31",
-        "location": "부평",
+        "dateTime": 1504781700000,
+        "dateString": "2017.09.07 19:55",
+        "location": "청원HUB",
         "tel": "",
-        "remark": "간선하차",
-        "statusCode": 50,
-        "statusText": "배송중(입고)"
-      },
-      {
-        "dateTime": 1510885140000,
-        "dateString": "2017.11.17 11:19",
-        "location": "인천가좌",
-        "tel": "",
-        "remark": "배달출발 (배달예정시간:20∼22시)",
-        "statusCode": 65,
-        "statusText": "배달중"
-      },
-      {
-        "dateTime": 1510903800000,
-        "dateString": "2017.11.17 16:30",
-        "location": "인천가좌",
-        "tel": "",
-        "remark": "배달완료",
-        "statusCode": 70,
-        "statusText": "배달완료"
+        "remark": "배송지역으로 상품이 이동중입니다.",
+        "statusCode": 40,
+        "statusText": "Department of a shipment"
       }
-    ]
+    ],
+    "statusCode": 40,
+    "statusText": "Department of a shipment"
   }
 }
 ```
