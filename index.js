@@ -8,6 +8,9 @@ const DeliveryCompanyType = require('./lib/models/DeliveryCompanyType')
 const i18n = require('./lib/utils/i18n')
 
 module.exports = (options = {}) => {
+  options.timeout = options.timeout || 10000
+  options.locale = options.locale || 'ko'
+
   i18n.setLocale(options.locale)
 
   const delibee = require('./lib/crawler')(options)
