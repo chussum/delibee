@@ -63,7 +63,7 @@ CJ대한통운 | CJ
 한진택배 | HANJIN
 롯데택배 (구. 현대택배) | LOTTE
 로젠택배 | LOGEN
-KG로지스 | LOGIS
+드림택배 (구. KG로지스) | DREAM
 CVSnet 편의점택배 | CVSNET
 CU 편의점택배 | CU
 
