@@ -123,33 +123,69 @@ StatusCode | StatusText
       "code": "CJ",
       "name": "CJ대한통운"
     },
-    "invoiceNumber": "611020165296",
-    "senderName": "-",
+    "invoiceNumber": "612566673760",
+    "senderName": "테*",
     "senderAddr": "",
-    "receiverName": "-",
+    "receiverName": "이*",
     "receiverAddr": "",
-    "history": Array[2][
+    "history": [
       {
-        "dateTime": 1504700880000,
-        "dateString": "2017.09.06 21:28",
-        "location": "의정부",
+        "dateTime": 1512043020000,
+        "dateString": "2017.11.30 20:57",
+        "location": "인천가좌심곡",
+        "tel": "",
+        "remark": "보내시는 고객님으로부터 상품을 인수받았습니다",
+        "statusCode": 20,
+        "statusText": "접수"
+      },
+      {
+        "dateTime": 1512055800000,
+        "dateString": "2017.12.01 00:30",
+        "location": "부평",
         "tel": "",
         "remark": "물류터미널로 상품이 이동중입니다.",
         "statusCode": 40,
-        "statusText": "Department of a shipment"
+        "statusText": "배송중(출고)"
       },
       {
-        "dateTime": 1504781700000,
-        "dateString": "2017.09.07 19:55",
-        "location": "청원HUB",
+        "dateTime": 1512124740000,
+        "dateString": "2017.12.01 19:39",
+        "location": "대전HUB",
         "tel": "",
         "remark": "배송지역으로 상품이 이동중입니다.",
         "statusCode": 40,
-        "statusText": "Department of a shipment"
+        "statusText": "배송중(출고)"
+      },
+      {
+        "dateTime": 1512168420000,
+        "dateString": "2017.12.02 07:47",
+        "location": "덕진",
+        "tel": "",
+        "remark": "고객님의 상품이 배송지에 도착하였습니다.(배송예정:--)",
+        "statusCode": 50,
+        "statusText": "배송중(입고)"
+      },
+      {
+        "dateTime": 1512178800000,
+        "dateString": "2017.12.02 10:40",
+        "location": "전북전주송천",
+        "tel": "",
+        "remark": "고객님의 상품을 배송할 예정입니다.(11∼13시)(배송담당:--)",
+        "statusCode": 65,
+        "statusText": "배달중"
+      },
+      {
+        "dateTime": 1512180420000,
+        "dateString": "2017.12.02 11:07",
+        "location": "전북전주송천",
+        "tel": "",
+        "remark": "고객님의 상품이 배송완료 되었습니다.(담당사원:--)",
+        "statusCode": 70,
+        "statusText": "배달완료"
       }
     ],
-    "statusCode": 40,
-    "statusText": "Department of a shipment"
+    "statusCode": 70,
+    "statusText": "배달완료"
   }
 }
 ```
