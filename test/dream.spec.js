@@ -6,8 +6,8 @@ const content = fs.readFileSync('./test/html/logis.html', 'utf8')
 
 chai.should()
 
-describe('KG로지스', () => {
-  const invoice = parser.logis(trackingCode, content)
+describe('드림택배 (구. KG로지스)', () => {
+  const invoice = parser.dream(trackingCode, content)
   const history = invoice.history
 
   it('Invoice', () => {
