@@ -159,7 +159,7 @@
   }
   function loadDeliveryCompanies () {
     NProgress.start();
-    axios.get('https://delibee.hyungdew.com/tracking/companies').then(function (res) {
+    axios.get('https://delibee.moodselah.com/tracking/companies').then(function (res) {
       document.getElementById('delivery-company').innerHTML = tmpl('delibee-company-template', res.data);
       NProgress.done();
     })
