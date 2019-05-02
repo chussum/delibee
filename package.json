@@ -50,7 +50,7 @@
     "node": ">= 7.6"
   },
   "bugs": {
-    "url": "http://github.com/flosdor/delibee/issues",
+    "url": "http://github.com/moodselah/delibee/issues",
     "email": "iam@hyungdew.com"
   },
   "scripts": {

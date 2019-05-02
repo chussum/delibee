@@ -206,7 +206,7 @@ app.listen(3000)
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/flosdor/delibee
+Bug reports and pull requests are welcome on GitHub at https://github.com/moodselah/delibee
 
 1.  **Fork** the repo on GitHub
 2.  **Clone** the project to your own machine
